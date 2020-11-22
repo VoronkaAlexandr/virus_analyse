@@ -155,47 +155,42 @@ def download_json(name, fn):
 
     return False
 
-    with open(processed_data_path / 'covid/covid41020.tsv') as tsvfile:
+def mut_spectr(fn, clock):
+    with open(processed_data_path / fn / '{}.tsv'.format(fn)) as tsvfile:
         tsv_table = pd.read_csv(tsvfile, sep='\t')
         from_to = []
         where_mut = []
         for line in tsv_table['mutations'].dropna():
             my_mutations = yaml.load(line)['nuc']
             for single_mut in my_mutations:
+                print(single_mut)
                 if ((single_mut[-1]) != '-') and ((single_mut[0]) != '-'):
                     from_to.append((single_mut[0], single_mut[-1]))
                     where_mut.append(single_mut[1:-1])
-        print(Counter(from_to))
-        print(where_mut)
-        covid_mutations = pd.DataFrame(
-            Counter(from_to))
-        covid_mutations.to_csv(processed_data_path / 'covid41020/covid41020_mut_spectr.tsv', sep='\t')
-        file = open(processed_data_path / "covid41020/where_was_mutations.txt", "w")
-        file.write(str(where_mut))
-        file.close()
+        new_virus_mut_spec = pd.DataFrame()
+        new_virus_mut_spec['Virus_Name'] = [fn]
+        for x, y in Counter(from_to).items():
+            new_virus_mut_spec[x] = [y]
+        if clock == 1:
+            new_virus_mut_spec.to_csv(processed_data_path / 'mut_spectr/mut_spectr.tsv', index = False, sep = '\t')
+        else:
+            virus_mut_spec = pd.read_csv(processed_data_path / 'mut_spectr/mut_spectr.tsv', sep = '\t')
+            virus_mut_spec.append(new_virus_mut_spec)
+            virus_mut_spec.to_csv(processed_data_path / 'mut_spectr/mut_spectr.tsv', index = False, index_label = None, sep = '\t')
+        with open(processed_data_path / fn / '{}_where_was_mutations.txt'.format(fn), 'w') as where_mutations:
+            where_mutations.write(str(where_mut))
+
+
 
 
 if __name__ == '__main__':
-     base_url = 'https://nextstrain.org/charon/getDataset?prefix=/ncov/global'
-     if download_json(base_url, "covid41020.json"):
-         extract_data_from_json('covid41020')
-     with open(processed_data_path / 'covid41020/covid41020.tsv') as tsvfile:
-         tsv_table = pd.read_csv(tsvfile, sep='\t')
-         from_to = []
-         where_mut = []
-         for line in tsv_table['mutations'].dropna():
-             my_mutations = yaml.load(line)['nuc']
-             for single_mut in my_mutations:
-                 if ((single_mut[-1]) != '-') and ((single_mut[0]) != '-'):
-                     from_to.append((single_mut[0], single_mut[-1]))
-                     where_mut.append(single_mut[1:-1])
-         print(Counter(from_to))
-         print(where_mut)
-         covid_mutations = pd.DataFrame()
-         covid_mutations['Virus_Name'] = ['covid41020']
-         for x, y in Counter(from_to).items():
-             covid_mutations[x] = [y]
-         covid_mutations.to_csv(processed_data_path / 'covid41020/covid41020_mut_spectr.tsv', sep='\t')
-         file = open(processed_data_path / "covid41020/where_was_mutations.txt", "w")
-         file.write(str(where_mut))
-         file.close()
+    i=0
+    with open('../data/processed/covid41020/virus_data.txt', 'r') as virus_data:
+        viruses = virus_data.readlines()
+        for line in viruses:
+            i+=1
+            base_url = line.split()[1]
+            virus_name = line.split()[0]
+            if download_json(base_url, "{}.json".format(virus_name)):
+                extract_data_from_json(virus_name)
+            mut_spectr(virus_name, i)
