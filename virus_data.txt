@@ -1,0 +1,14 @@
+coronavirus	https://nextstrain.org/charon/getDataset?prefix=/ncov/global
+west_nile_virus	https://nextstrain.org/charon/getDataset?prefix=/WNV/NA
+mumps	https://nextstrain.org/charon/getDataset?prefix=/mumps/na
+zika	https://nextstrain.org/charon/getDataset?prefix=/zika
+west_african_ebola	https://nextstrain.org/charon/getDataset?prefix=/ebola
+dengue	https://nextstrain.org/charon/getDataset?prefix=/dengue/denv1
+avian_influenza	https://nextstrain.org/charon/getDataset?prefix=/flu/avian/h5n1/ha
+measles	https://nextstrain.org/charon/getDataset?prefix=/measles
+tuberculosis	https://nextstrain.org/charon/getDataset?prefix=/tb/global
+h3n2	https://nextstrain.org/charon/getDataset?prefix=/flu/seasonal/h3n2/ha/2y
+h5n1	https://nextstrain.org/charon/getDataset?prefix=/flu/avian/h5n1/ha
+enterovirus_d68	https://nextstrain.org/charon/getDataset?prefix=/enterovirus/d68/genome
+lassa_virus	https://nextstrain.org/charon/getDataset?prefix=/community/pauloluniyi/lassa/l
+hum_resp_syncy_vir_st_a	https://nextstrain.org/charon/getDataset?prefix=/community/JianiC/rsv/A/WGS
